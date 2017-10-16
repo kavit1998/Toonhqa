@@ -1,0 +1,6 @@
+token: YOUR_TOKEN
+mysql_database: YOUR_DATABASE
+mysql_host: localhost
+mysql_username: root
+mysql_password:
+mysql_port: 3306
