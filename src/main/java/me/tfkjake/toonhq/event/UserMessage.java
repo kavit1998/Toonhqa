@@ -13,9 +13,7 @@ public class UserMessage extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
-        if(e.getMessage().getContent().equalsIgnoreCase("make me a group")){
-            e.getMessage().getTextChannel().sendMessage("No").queue();
-        }
+
     }
 
 }
