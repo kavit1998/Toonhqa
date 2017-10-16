@@ -1,2 +1,1 @@
-# ToonHQ
-A group tracker Discord Bot for Toontown Discords.
+[![N|Solid](https://i.imgur.com/sQqGASn.png)
