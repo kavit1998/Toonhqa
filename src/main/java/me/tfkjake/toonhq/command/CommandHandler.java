@@ -9,17 +9,17 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import java.util.HashMap;
 import java.util.List;
 
-public class CommandHandler extends ListenerAdapter{
+public class CommandHandler extends ListenerAdapter {
 
-    public boolean handle(Guild server, Message message, User user, String sMessage){
+    public void handle(Guild server, Message message, User user, String sMessage){
 
-        String prefix = "~"; // You can change this!
+        String prefix = "hq!"; // You can change this!
 
         if(!sMessage.startsWith(prefix))
-            return false;
+            return;
 
         if(message.getAuthor().isBot())
-            return false;
+            return;
 
         sMessage = sMessage.substring(prefix.length());
 
@@ -29,8 +29,6 @@ public class CommandHandler extends ListenerAdapter{
 
         String baseCommand = args[0];
 
-        System.out.println(command);
-
         AbstractCommand cmd = null;
 
         for(Command c : ToonHQ.getCommandManager().getCommands()){
@@ -38,22 +36,18 @@ public class CommandHandler extends ListenerAdapter{
                 cmd = c.getExecutor();
         }
 
-        System.out.println(command);
-
         Command c = ToonHQ.getCommandManager().getCommand(baseCommand);
 
         if(cmd == null && c == null)
-            return false;
-
-        System.out.println(command);
-
-        System.out.println(command);
+            return;
 
         String[] nArgs = new String[args.length - 1];
         for(int i = 1; i < args.length; i++){
             nArgs[i-1] = args[i];
         }
-        return true;
+
+        cmd.execute(server, message, user, nArgs);
+
     }
 
 }

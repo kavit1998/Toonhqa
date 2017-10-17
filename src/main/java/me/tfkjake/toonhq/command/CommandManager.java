@@ -31,7 +31,7 @@ public class CommandManager {
         if(getCommand(name) != null) return;
         List<HashMap<String, Object>> commands = toonHQ.getMySQL().find("SELECT * FROM commands WHERE command = ?", name);
         if(commands.isEmpty()){
-            toonHQ.getMySQL().add("INSERT INTO commands (command, help) VALUES (?, ?)", name, "Some help here");
+            toonHQ.getMySQL().add("INSERT INTO commands (command) VALUES (?)", name);
             Command command = new Command(name, executor);
             this.commands.add(command);
             System.out.println("Command \"" + name + "\" added to the database!");

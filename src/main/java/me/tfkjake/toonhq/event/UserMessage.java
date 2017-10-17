@@ -1,10 +1,10 @@
 package me.tfkjake.toonhq.event;
 
 import me.tfkjake.toonhq.ToonHQ;
+import me.tfkjake.toonhq.command.CommandHandler;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-public class UserMessage extends ListenerAdapter {
+public class UserMessage extends CommandHandler {
 
     private ToonHQ toonHQ;
     public UserMessage(ToonHQ toonHQ){
@@ -13,7 +13,7 @@ public class UserMessage extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
-
+        handle(e.getGuild(), e.getMessage(), e.getAuthor(), e.getMessage().getContent());
     }
 
 }
