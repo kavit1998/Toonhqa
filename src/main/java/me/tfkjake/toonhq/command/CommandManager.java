@@ -48,4 +48,13 @@ public class CommandManager {
         }
     }
 
+    public String getPrefix(String serverId){
+        List<HashMap<String, Object>> servers = toonHQ.getMySQL().find("SELECT * FROM server_config WHERE server_id = ? AND server_key = ?", serverId, "prefix");
+        String prefix = "hq!";
+        if(servers.size() > 0){
+            prefix = servers.get(0).get("server_value").toString();
+        }
+        return prefix;
+    }
+
 }

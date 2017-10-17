@@ -13,13 +13,16 @@ public class CommandHandler extends ListenerAdapter {
 
     public void handle(Guild server, Message message, User user, String sMessage){
 
-        String prefix = "hq!"; // You can change this!
+        String prefix = ToonHQ.getCommandManager().getPrefix(server.getId());
 
-        if(!sMessage.startsWith(prefix))
+        if(!sMessage.startsWith(prefix) && !sMessage.startsWith("hq!prefix"))
             return;
 
         if(message.getAuthor().isBot())
             return;
+
+        if(sMessage.startsWith("hq!prefix"))
+            prefix = "hq!";
 
         sMessage = sMessage.substring(prefix.length());
 

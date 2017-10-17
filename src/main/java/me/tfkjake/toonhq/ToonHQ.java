@@ -2,13 +2,20 @@ package me.tfkjake.toonhq;
 
 import me.tfkjake.toonhq.command.CommandManager;
 import me.tfkjake.toonhq.commands.Help;
+import me.tfkjake.toonhq.commands.Prefix;
+import me.tfkjake.toonhq.commands.Setup;
 import me.tfkjake.toonhq.commands.neighbourhood.*;
+import me.tfkjake.toonhq.event.GuildAddBot;
+import me.tfkjake.toonhq.event.GuildRemoveBot;
 import me.tfkjake.toonhq.event.UserMessage;
 import me.tfkjake.toonhq.util.MySQL;
 import me.tfkjake.toonhq.util.Properties;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class ToonHQ {
 
@@ -23,6 +30,8 @@ public class ToonHQ {
 
             // Register Events
             jda.addEventListener(new UserMessage(this));
+            jda.addEventListener(new GuildAddBot(this));
+            jda.addEventListener(new GuildRemoveBot(this));
 
         }catch(Exception e){
             System.out.println("There was an error starting ToonHQ: " + e.getMessage());
@@ -37,9 +46,12 @@ public class ToonHQ {
         mySQL.createTable("CREATE TABLE IF NOT EXISTS `commands` (\n\t`id` INT NOT NULL AUTO_INCREMENT,\n\t`command` VARCHAR(50) NOT NULL,\n\tPRIMARY KEY (`id`),\n\tUNIQUE INDEX `command` (`command`)\n)\nCOLLATE='latin1_swedish_ci'\nENGINE=InnoDB\n;");
         mySQL.createTable("CREATE TABLE IF NOT EXISTS `neighbourhoods` (\n\t`id` INT NOT NULL AUTO_INCREMENT,\n\t`server_id` VARCHAR(72) NULL,\n\t`name` VARCHAR(255) NULL,\n\t`neighbourhood_id` VARCHAR(255) NULL,\n\tPRIMARY KEY (`id`),\n\tINDEX `id` (`id`)\n)\nCOLLATE='latin1_swedish_ci'\nENGINE=InnoDB\n;");
         mySQL.createTable("CREATE TABLE IF NOT EXISTS `neighbourhood_aliases` (\n\t`id` INT NOT NULL AUTO_INCREMENT,\n\t`server_id` VARCHAR(72) NULL,\n\t`neighbourhood_id` VARCHAR(72) NULL,\n\t`alias` VARCHAR(72) NULL,\n\tPRIMARY KEY (`id`),\n\tINDEX `id` (`id`)\n)\nCOLLATE='latin1_swedish_ci'\nENGINE=InnoDB\n;");
+        mySQL.createTable("CREATE TABLE IF NOT EXISTS `server_config` (\n\t`id` INT NOT NULL AUTO_INCREMENT,\n\t`server_id` VARCHAR(72) NULL,\n\t`server_key` VARCHAR(72) NULL,\n\t`server_value` VARCHAR(72) NULL,\n\tPRIMARY KEY (`id`),\n\tINDEX `id` (`id`)\n)\nCOLLATE='latin1_swedish_ci'\nENGINE=InnoDB\n;");
 
         // Register commands
         commandManager.registerCommand("help", new Help(this));
+        commandManager.registerCommand("prefix", new Prefix(this));
+        commandManager.registerCommand("setup", new Setup(this));
 
         commandManager.registerCommand("addneighbourhood", new AddNeighbourhood(this), "addnbh");
         commandManager.registerCommand("removeneighbourhood", new RemoveNeighbourhood(this), "removenbh");

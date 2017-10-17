@@ -2,9 +2,13 @@ package me.tfkjake.toonhq.util;
 
 import me.tfkjake.toonhq.ToonHQ;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
 
 import java.awt.*;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,6 +43,14 @@ public class Util {
             }
 
         }, (seconds*1000));
+    }
+
+    public static Optional<TextChannel> getFirstWriteableChannel(Guild server){
+        for(TextChannel channel : server.getTextChannels()){
+            if(channel.canTalk())
+                return Optional.of(channel);
+        }
+        return Optional.empty();
     }
 
 
