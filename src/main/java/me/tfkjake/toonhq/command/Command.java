@@ -7,6 +7,7 @@ public class Command {
 
     String name;
     AbstractCommand executor;
+    List<String> aliases = new ArrayList<>();
 
     public Command(String name, AbstractCommand executor){
         this.name = name;
@@ -15,6 +16,15 @@ public class Command {
 
     public String getName(){
         return name;
+    }
+
+    public List<String> getAliases(){
+        return aliases;
+    }
+
+    public void addAlias(String alias){
+        if(!aliases.contains(alias))
+            aliases.add(alias);
     }
 
     public void setExecutor(AbstractCommand executor){

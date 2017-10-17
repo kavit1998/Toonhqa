@@ -26,10 +26,12 @@ public class Help extends AbstractCommand {
         builder.setAuthor("ToonHQ", null, "https://i.imgur.com/ZyA9ZTm.png");
         builder.setDescription("A JDA Bot written by Jake S. The source can be found at https://goo.gl/Cbniku");
         builder.addField("Commands", "help - Display this message." +
-                "\n\naddneighbourhood - Add a neighbourhood - addneighbourhood \"neighbourhood\"" +
-                "\n\nremoveneighbourhood - Remove a neighbourhood - removeneighbourhood \"neighbourhood\" (This will delete all streets in this neighbourhood)" +
-                "\n\neditneighbourhood - Edit a neighbourhood - editneighbourhood \"neighbourhood\" \"new neighbourhood\"" +
-                "\n\nneighbourhoods - List available neighbourhoods", true);
+                "\naddneighbourhood - Add a neighbourhood" +
+                "\nremoveneighbourhood - Remove a neighbourhood" +
+                "\neditneighbourhood - Edit a neighbourhood" +
+                "\nneighbourhoods - List available neighbourhoods" +
+                "\naddneighbourhoodalias - Add an alias to a neighbourhood" +
+                "\nremoveneighbourhoodalias - Remove an alias from a neighbourhood", true);
 
         message.getTextChannel().sendMessage(builder.build()).queue();
     }

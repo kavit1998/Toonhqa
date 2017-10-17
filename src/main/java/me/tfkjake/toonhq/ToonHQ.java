@@ -41,12 +41,12 @@ public class ToonHQ {
         // Register commands
         commandManager.registerCommand("help", new Help(this));
 
-        commandManager.registerCommand("addneighbourhood", new AddNeighbourhood(this));
-        commandManager.registerCommand("removeneighbourhood", new RemoveNeighbourhood(this));
-        commandManager.registerCommand("editneighbourhood", new EditNeighbourhood(this));
-        commandManager.registerCommand("neighbourhoods", new Neighbourhoods(this));
-        commandManager.registerCommand("addneighbourhoodalias", new AddNeighbourhoodAlias(this));
-        commandManager.registerCommand("removeneighbourhoodalias", new RemoveNeighbourhoodAlias(this));
+        commandManager.registerCommand("addneighbourhood", new AddNeighbourhood(this), "addnbh");
+        commandManager.registerCommand("removeneighbourhood", new RemoveNeighbourhood(this), "removenbh");
+        commandManager.registerCommand("editneighbourhood", new EditNeighbourhood(this), "editnbh");
+        commandManager.registerCommand("neighbourhoods", new Neighbourhoods(this), "hoods", "nbhs");
+        commandManager.registerCommand("addneighbourhoodalias", new AddNeighbourhoodAlias(this), "addnbhalias");
+        commandManager.registerCommand("removeneighbourhoodalias", new RemoveNeighbourhoodAlias(this), "removenbhalias");
 
     }
 

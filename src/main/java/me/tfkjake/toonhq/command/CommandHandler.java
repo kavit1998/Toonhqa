@@ -34,6 +34,10 @@ public class CommandHandler extends ListenerAdapter {
         for(Command c : ToonHQ.getCommandManager().getCommands()){
             if(c.getExecutor().getName().equalsIgnoreCase(command))
                 cmd = c.getExecutor();
+            if(c.getAliases().contains(command.toLowerCase())){
+                baseCommand = c.getName();
+                cmd = c.getExecutor();
+            }
         }
 
         Command c = ToonHQ.getCommandManager().getCommand(baseCommand);
