@@ -42,10 +42,11 @@ public class RemoveNeighbourhoodAlias extends AbstractCommand {
         Pattern p = Pattern.compile("\\\"(.*?)\\\"");
         Matcher m = p.matcher(a);
         while(m.find()) {
-            if(neighbourhood.isEmpty())
+            if(neighbourhood.isEmpty()) {
                 neighbourhood = m.group();
-            if(!neighbourhood.isEmpty())
-                alias = m.group();
+                continue;
+            }
+            alias = m.group();
         }
 
         if(neighbourhood.isEmpty()){
@@ -61,21 +62,21 @@ public class RemoveNeighbourhoodAlias extends AbstractCommand {
         neighbourhood = neighbourhood.replace("\"", "");
         alias = alias.replace("\"", "");
 
-        List<HashMap<String, Object>> result = toonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE name = ? AND server_id = ?", neighbourhood, server.getId());
+        List<HashMap<String, Object>> result = ToonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE name = ? AND server_id = ?", neighbourhood, server.getId());
 
         if(result.size() == 0){
             Util.deleteMessages(10, message.getTextChannel().sendMessage("That neighbourhood doesn't exist!").complete());
             return;
         }
 
-        List<HashMap<String, Object>> result2 = toonHQ.getMySQL().find("SELECT * FROM neighbourhood_aliases WHERE server_id = ? AND neighbourhood_id = ?", server.getId(), result.get(0).get("neighbourhood_id").toString());
+        List<HashMap<String, Object>> result2 = ToonHQ.getMySQL().find("SELECT * FROM neighbourhood_aliases WHERE server_id = ? AND neighbourhood_id = ?", server.getId(), result.get(0).get("neighbourhood_id").toString());
 
         if(result2.size() == 0){
             Util.deleteMessages(10, message.getTextChannel().sendMessage("That alias doesn't exist for that neighbourhood!").complete());
             return;
         }
 
-        toonHQ.getMySQL().add("DELETE FROM neighbourhood_aliases WHERE server_id = ? AND neighbourhood_id = ? AND alias = ?", server.getId(), result.get(0).get("neighbourhood_id").toString(), alias);
+        ToonHQ.getMySQL().add("DELETE FROM neighbourhood_aliases WHERE server_id = ? AND neighbourhood_id = ? AND alias = ?", server.getId(), result.get(0).get("neighbourhood_id").toString(), alias);
 
         Util.deleteMessages(10, message.getTextChannel().sendMessage("Removed alias \"" + alias + "\" from \"" + neighbourhood + "\"").complete());
 

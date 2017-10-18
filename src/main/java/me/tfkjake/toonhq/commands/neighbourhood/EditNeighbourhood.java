@@ -42,10 +42,11 @@ public class EditNeighbourhood extends AbstractCommand {
         Pattern p = Pattern.compile("\\\"(.*?)\\\"");
         Matcher m = p.matcher(a);
         while(m.find()) {
-            if(neighbourhood.isEmpty())
+            if(neighbourhood.isEmpty()) {
                 neighbourhood = m.group();
-            if(!neighbourhood.isEmpty())
-                newNeighbourhood = m.group();
+                continue;
+            }
+            newNeighbourhood = m.group();
         }
 
         if(neighbourhood.isEmpty()){
@@ -61,14 +62,14 @@ public class EditNeighbourhood extends AbstractCommand {
         neighbourhood = neighbourhood.replace("\"", "");
         newNeighbourhood = newNeighbourhood.replace("\"", "");
 
-        List<HashMap<String, Object>> result = toonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE name = ? AND server_id = ?", neighbourhood, server.getId());
+        List<HashMap<String, Object>> result = ToonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE name = ? AND server_id = ?", neighbourhood, server.getId());
 
         if(result.size() == 0){
             Util.deleteMessages(10, message.getTextChannel().sendMessage("That neighbourhood doesn't exist!").complete());
             return;
         }
 
-        toonHQ.getMySQL().update("UPDATE neighbourhoods SET name = ? WHERE neighbourhood_id = ? AND server_id = ?", newNeighbourhood, result.get(0).get("neighbourhood_id").toString(), server.getId());
+        ToonHQ.getMySQL().update("UPDATE neighbourhoods SET name = ? WHERE neighbourhood_id = ? AND server_id = ?", newNeighbourhood, result.get(0).get("neighbourhood_id").toString(), server.getId());
 
         Util.deleteMessages(10, message.getTextChannel().sendMessage("Updated neighbourhood: Set \"" + neighbourhood + "\" to \"" + newNeighbourhood + "\"").complete());
 

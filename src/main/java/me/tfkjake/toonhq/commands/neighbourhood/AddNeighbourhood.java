@@ -42,7 +42,7 @@ public class AddNeighbourhood extends AbstractCommand {
         Pattern p = Pattern.compile("\\\"(.*?)\\\"");
         Matcher m = p.matcher(a);
         while(m.find()) {
-            neighbourhood = m.group(0);
+            neighbourhood = m.group();
         }
 
         if(neighbourhood.isEmpty()){
@@ -52,7 +52,7 @@ public class AddNeighbourhood extends AbstractCommand {
 
         neighbourhood = neighbourhood.replace("\"", "");
 
-        List<HashMap<String, Object>> result = toonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE name = ? AND server_id = ?", neighbourhood, server.getId());
+        List<HashMap<String, Object>> result = ToonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE name = ? AND server_id = ?", neighbourhood, server.getId());
         if(result.size() > 0){
             Util.deleteMessages(10, message.getTextChannel().sendMessage("That neighbourhood already exists in the database!").complete());
             return;
@@ -60,7 +60,7 @@ public class AddNeighbourhood extends AbstractCommand {
 
         UUID uuid = UUID.randomUUID();
 
-        toonHQ.getMySQL().add("INSERT INTO neighbourhoods (server_id, name, neighbourhood_id) VALUES (?,?,?)", server.getId(), neighbourhood, uuid.toString());
+        ToonHQ.getMySQL().add("INSERT INTO neighbourhoods (server_id, name, neighbourhood_id) VALUES (?,?,?)", server.getId(), neighbourhood, uuid.toString());
 
         Util.deleteMessages(10, message.getTextChannel().sendMessage("Neighbourhood \"" + neighbourhood + "\" added!").complete());
 

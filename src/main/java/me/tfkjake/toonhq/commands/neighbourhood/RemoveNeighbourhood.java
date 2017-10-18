@@ -42,7 +42,7 @@ public class RemoveNeighbourhood extends AbstractCommand {
         Pattern p = Pattern.compile("\\\"(.*?)\\\"");
         Matcher m = p.matcher(a);
         while(m.find()) {
-            neighbourhood = m.group(0);
+            neighbourhood = m.group();
         }
 
         if(neighbourhood.isEmpty()){
@@ -52,15 +52,15 @@ public class RemoveNeighbourhood extends AbstractCommand {
 
         neighbourhood = neighbourhood.replace("\"", "");
 
-        List<HashMap<String, Object>> result = toonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE name = ? AND server_id = ?", neighbourhood, server.getId());
+        List<HashMap<String, Object>> result = ToonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE name = ? AND server_id = ?", neighbourhood, server.getId());
         if(result.size() ==  0){
             Util.deleteMessages(10, message.getTextChannel().sendMessage("That neighbourhood doesn't exist!").complete());
             return;
         }
 
-        toonHQ.getMySQL().add("DELETE FROM neighbourhoods WHERE name = ? AND server_id = ?", neighbourhood, server.getId());
+        ToonHQ.getMySQL().add("DELETE FROM neighbourhoods WHERE name = ? AND server_id = ?", neighbourhood, server.getId());
 
-        // TODO: Remove all streets with that neighbourhood
+        ToonHQ.getMySQL().remove("DELETE FROM streets WHERE server_id = ? AND neighbourhood_id = ?", server.getId(), result.get(0).get("neighbourhood_id").toString());
 
         Util.deleteMessages(10, message.getTextChannel().sendMessage("Neighbourhood \"" + neighbourhood + "\" removed!").complete());
 

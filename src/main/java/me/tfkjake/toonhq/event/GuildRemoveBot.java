@@ -13,9 +13,10 @@ public class GuildRemoveBot extends ListenerAdapter {
 
     @Override
     public void onGuildLeave(GuildLeaveEvent e){
-        toonHQ.getMySQL().remove("DELETE FROM server_config WHERE server_id = ?", e.getGuild().getId());
-        toonHQ.getMySQL().remove("DELETE FROM neighbourhoods WHERE server_id = ?", e.getGuild().getId());
-        toonHQ.getMySQL().remove("DELETE FROM neighbourhood_aliases WHERE server_id = ?", e.getGuild().getId());
+        ToonHQ.getMySQL().remove("DELETE FROM server_config WHERE server_id = ?", e.getGuild().getId());
+        ToonHQ.getMySQL().remove("DELETE FROM neighbourhoods WHERE server_id = ?", e.getGuild().getId());
+        ToonHQ.getMySQL().remove("DELETE FROM neighbourhood_aliases WHERE server_id = ?", e.getGuild().getId());
+        ToonHQ.getMySQL().remove("DELETE FROM streets WHERE server_id = ?", e.getGuild().getId());
     }
 
 

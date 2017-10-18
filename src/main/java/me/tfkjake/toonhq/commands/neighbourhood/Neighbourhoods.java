@@ -23,7 +23,7 @@ public class Neighbourhoods extends AbstractCommand {
     @Override
     public void execute(Guild server, Message message, User user, String[] args) {
         Util.deleteMessages(5, message);
-        List<HashMap<String, Object>> results = toonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE server_id = ?", server.getId());
+        List<HashMap<String, Object>> results = ToonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE server_id = ?", server.getId());
         if(results.size() == 0){
             Util.deleteMessages(10, message.getTextChannel().sendMessage("There are no neighbourhoods!").complete());
             return;

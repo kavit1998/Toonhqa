@@ -3,14 +3,12 @@ package me.tfkjake.toonhq.util;
 import me.tfkjake.toonhq.ToonHQ;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 import java.awt.*;
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+import java.util.List;
 
 public class Util {
 
@@ -53,6 +51,19 @@ public class Util {
         return Optional.empty();
     }
 
+    public static String getNeighbourhoodFromAlias(String server_id, String alias){
+        List<HashMap<String, Object>> aliases = ToonHQ.getMySQL().find("SELECT * FROM neighbourhood_aliases WHERE server_id = ? AND alias = ?", server_id, alias);
+        if(aliases.size() == 0)
+            return null;
+
+        List<HashMap<String, Object>> neighbourhoods = ToonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE server_id = ? AND neighbourhood_id = ?", server_id, aliases.get(0).get("neighbourhood_id").toString());
+        if(neighbourhoods.size() == 0){
+            ToonHQ.getMySQL().remove("DELETE FROM neighbourhood_alias WHERE server_id = ? AND neighbourhood_id = ?", server_id, aliases.get(0).get("neighbourhood_id").toString());
+            return null;
+        }
+
+        return neighbourhoods.get(0).get("name").toString();
+    }
 
 
 }

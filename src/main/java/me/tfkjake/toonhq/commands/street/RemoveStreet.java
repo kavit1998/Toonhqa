@@ -1,4 +1,4 @@
-package me.tfkjake.toonhq.commands.neighbourhood;
+package me.tfkjake.toonhq.commands.street;
 
 import me.tfkjake.toonhq.ToonHQ;
 import me.tfkjake.toonhq.command.AbstractCommand;
@@ -9,14 +9,15 @@ import net.dv8tion.jda.core.entities.User;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddNeighbourhoodAlias extends AbstractCommand {
+public class RemoveStreet extends AbstractCommand {
 
     private ToonHQ toonHQ;
-    public AddNeighbourhoodAlias(ToonHQ toonHQ){
-        super("addneighbourhoodalias");
+    public RemoveStreet(ToonHQ toonHQ){
+        super("removestreet");
         this.toonHQ = toonHQ;
     }
 
@@ -28,7 +29,7 @@ public class AddNeighbourhoodAlias extends AbstractCommand {
             return;
         }
         if(args.length == 0){
-            Util.deleteMessages(10, message.getTextChannel().sendMessage("Usage: addneighbourhoodalias \"neighbourhood\" \"alias\" (E.G. addneighbourhoodalias \"Toontown Central\" \"TTC\")").complete());
+            Util.deleteMessages(10, message.getTextChannel().sendMessage("Usage: removestreet \"neighbourhood\" \"street\" (E.G. removestreet \"Toontown Central\" \"Silly Street\")").complete());
             return;
         }
 
@@ -38,7 +39,7 @@ public class AddNeighbourhoodAlias extends AbstractCommand {
         }
 
         String neighbourhood = "";
-        String alias = "";
+        String street = "";
         Pattern p = Pattern.compile("\\\"(.*?)\\\"");
         Matcher m = p.matcher(a);
         while(m.find()) {
@@ -46,7 +47,7 @@ public class AddNeighbourhoodAlias extends AbstractCommand {
                 neighbourhood = m.group();
                 continue;
             }
-            alias = m.group();
+            street = m.group();
         }
 
         if(neighbourhood.isEmpty()){
@@ -54,31 +55,31 @@ public class AddNeighbourhoodAlias extends AbstractCommand {
             return;
         }
 
-        if(alias.isEmpty()){
-            Util.deleteMessages(10, message.getTextChannel().sendMessage("Usage: addneighbourhoodalias \"neighbourhood\" \"alias\" (E.G. addneighbourhoodalias \"Toontown Central\" \"TTC\")").complete());
+        if(street.isEmpty()){
+            Util.deleteMessages(10, message.getTextChannel().sendMessage("Please surround the street name in quotations, e.g. \"Silly Street\"").complete());
             return;
         }
 
         neighbourhood = neighbourhood.replace("\"", "");
-        alias = alias.replace("\"", "");
+        street = street.replace("\"", "");
 
-        List<HashMap<String, Object>> result = ToonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE name = ? AND server_id = ?", neighbourhood, server.getId());
-
-        if(result.size() == 0){
+        List<HashMap<String, Object>> neighbourhoods = ToonHQ.getMySQL().find("SELECT * FROM neighbourhoods WHERE name = ? AND server_id = ?", neighbourhood, server.getId());
+        if(neighbourhoods.size() == 0){
             Util.deleteMessages(10, message.getTextChannel().sendMessage("That neighbourhood doesn't exist!").complete());
             return;
         }
 
-        List<HashMap<String, Object>> result2 = ToonHQ.getMySQL().find("SELECT * FROM neighbourhood_aliases WHERE server_id = ? AND neighbourhood_id = ?", server.getId(), result.get(0).get("neighbourhood_id").toString());
+        String nb_id = neighbourhoods.get(0).get("neighbourhood_id").toString();
 
-        if(result2.size() > 0){
-            Util.deleteMessages(10, message.getTextChannel().sendMessage("That alias already exists for that neighbourhood!").complete());
+        List<HashMap<String, Object>> streets = ToonHQ.getMySQL().find("SELECT * FROM streets WHERE name = ? AND server_id = ? AND neighbourhood_id = ?", street, server.getId(), nb_id);
+        if(streets.size() == 0){
+            Util.deleteMessages(10, message.getTextChannel().sendMessage("That street doesn't exist in that neighbourhood!").complete());
             return;
         }
 
-        ToonHQ.getMySQL().add("INSERT INTO neighbourhood_aliases (server_id, neighbourhood_id, alias) VALUES (?,?,?)", server.getId(), result.get(0).get("neighbourhood_id").toString(), alias);
+        ToonHQ.getMySQL().add("REMOVE FROM streets WHERE server_id = ? AND street_id = ?", server.getId(), streets.get(0).get("street_id").toString());
 
-        Util.deleteMessages(10, message.getTextChannel().sendMessage("Added alias \"" + alias + "\" to \"" + neighbourhood + "\"").complete());
+        Util.deleteMessages(10, message.getTextChannel().sendMessage("Street \"" + street + "\" removed from \"" + neighbourhood + "\"!").complete());
 
     }
 }

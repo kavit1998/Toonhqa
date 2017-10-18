@@ -32,12 +32,12 @@ public class Prefix extends AbstractCommand {
 
         String prefix = args[0];
 
-        List<HashMap<String, Object>> servers = toonHQ.getMySQL().find("SELECT * FROM server_config WHERE server_id = ? AND server_key = ?", server.getId(), "prefix");
+        List<HashMap<String, Object>> servers = ToonHQ.getMySQL().find("SELECT * FROM server_config WHERE server_id = ? AND server_key = ?", server.getId(), "prefix");
 
         if(servers.size() > 0){
-            toonHQ.getMySQL().update("UPDATE server_config SET server_value = ? WHERE server_id = ? AND server_key = ?", prefix, server.getId(), "prefix");
+            ToonHQ.getMySQL().update("UPDATE server_config SET server_value = ? WHERE server_id = ? AND server_key = ?", prefix, server.getId(), "prefix");
         }else{
-            toonHQ.getMySQL().add("INSERT INTO server_config (server_id, server_key, server_value) VALUES (?,?,?)", server.getId(), "prefix", prefix);
+            ToonHQ.getMySQL().add("INSERT INTO server_config (server_id, server_key, server_value) VALUES (?,?,?)", server.getId(), "prefix", prefix);
         }
 
         Util.deleteMessages(10, message.getTextChannel().sendMessage("Prefix updated!").complete());
